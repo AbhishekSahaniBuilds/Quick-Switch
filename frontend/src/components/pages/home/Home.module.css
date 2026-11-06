@@ -6,8 +6,10 @@
   background-color: #f5f0e6;
   padding: 20px;
   box-sizing: border-box;
+}
 
-  @media (max-width: 480px) {
+@media (max-width: 480px) {
+  .pageWrapper {
     padding: 12px;
   }
 }
@@ -23,12 +25,16 @@
   transition:
     width 0.3s ease,
     border-radius 0.3s ease;
+}
 
-  @media (max-width: 600px) {
+@media (max-width: 600px) {
+  .contentContainer {
     width: 96%;
   }
+}
 
-  @media (max-width: 400px) {
+@media (max-width: 400px) {
+  .contentContainer {
     width: 100%;
     border-radius: 12px;
   }

@@ -1,6 +1,7 @@
 import "./css/App.css";
 import Home from "./components/pages/home/Home";
-import Chat from "./components/pages/chat/Chat";
+import Chat from "./components/pages/bot_pages/chat/Chat";
+import AskModel from "./components/pages/bot_pages/ask_model/AskModel";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter(
@@ -10,8 +11,12 @@ const router = createBrowserRouter(
       element: <Home />,
     },
     {
-      path: "/chat",
+      path: "/chat/:modelName",
       element: <Chat />,
+    },
+    {
+      path: "/model",
+      element: <AskModel />,
     },
   ],
   {
