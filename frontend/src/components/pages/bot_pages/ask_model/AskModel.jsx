@@ -14,12 +14,15 @@ function AskModel() {
     async function loadModels() {
       try {
         const response = await fetch_get_models();
+
         if (!response["succeed"]) {
-          setError("internal_error");
+          setError("internal_error"); // Wrapped in strings to prevent ReferenceError
           return;
         }
+
         modelListRef.current = response;
-        setModelList(response.output?.output || {});
+        // FIX: Changed from response.output?.output to just response.output
+        setModelList(response.output || {});
       } catch (err) {
         setError("failed_to_load");
       } finally {
@@ -59,33 +62,39 @@ function AskModel() {
             </Link>
             <h1 className={styles.titleWrapper}>Select One Model</h1>
           </div>
+
           <h2 className={styles.subtitleText}>
             Select a Model from the list to start the Session.
           </h2>
+
           <div className={styles.selectModelWrapper}>
             {loading && <p className={styles.loadingText}>Loading Models...</p>}
+
             {!loading &&
               modelList &&
               Object.entries(modelList).map(([provider, creators]) => (
                 <div key={provider} className={styles.providerSection}>
                   <h3 className={styles.modelProviderName}>{provider}</h3>
-                  {Object.entries(creators).map(([creator, models]) => (
-                    <div key={creator} className={styles.creatorSection}>
-                      <h4 className={styles.modelOwnerTitle}>{creator}</h4>
-                      <div className={styles.modelList}>
-                        {Array.isArray(models) &&
-                          models.map((model) => (
-                            <p key={model} className={styles.modelName}>
-                              <Link
-                                to={`/chat/${encodeURIComponent(`${provider}/${creator}/${model}`)}`}
-                              >
-                                <Button>{model}</Button>
-                              </Link>
-                            </p>
-                          ))}
+
+                  {creators &&
+                    Object.entries(creators).map(([creator, models]) => (
+                      <div key={creator} className={styles.creatorSection}>
+                        <h4 className={styles.modelOwnerTitle}>{creator}</h4>
+
+                        <div className={styles.modelList}>
+                          {Array.isArray(models) &&
+                            models.map((model) => (
+                              <p key={model} className={styles.modelName}>
+                                <Link
+                                  to={`/chat/${encodeURIComponent(`${provider}/${creator}/${model}`)}`}
+                                >
+                                  <Button>{model}</Button>
+                                </Link>
+                              </p>
+                            ))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               ))}
           </div>
