@@ -91,7 +91,14 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-
+.loadingText {
+  font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+  font-weight: 600;
+  color: #1e3b2f;
+  margin: 0 0 8px 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
 .modelOwnerTitle {
   font-size: clamp(0.8rem, 2.5vw, 0.9rem);
   font-weight: 600;

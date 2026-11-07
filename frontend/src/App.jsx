@@ -11,7 +11,7 @@ const router = createBrowserRouter(
       element: <Home />,
     },
     {
-      path: "/chat/:modelName",
+      path: "/chat/:modelInfo",
       element: <Chat />,
     },
     {

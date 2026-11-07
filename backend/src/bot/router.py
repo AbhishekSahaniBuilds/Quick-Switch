@@ -11,3 +11,8 @@ bot_route = APIRouter(prefix="/bot")
 @bot_route.get("/get_models")
 def get_llms():
     return bot_controller.get_llms()
+
+
+@bot_route.post("/prompt")
+def prompt(discription: bot_dto.PromptModel):
+    return bot_controller.sr_models(discription)

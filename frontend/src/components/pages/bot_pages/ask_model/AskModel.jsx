@@ -35,7 +35,7 @@ function AskModel() {
         <div className={styles.contentContainer}>
           <div className={styles.contentWrapper}>
             <div className={styles.topHeadingSection}>
-              <Link to={"/"}>
+              <Link to="/">
                 <Button>Back</Button>
               </Link>
               <h1 className={styles.titleWrapper}>Something Went Wrong!</h1>
@@ -54,16 +54,14 @@ function AskModel() {
       <div className={styles.contentContainer}>
         <div className={styles.contentWrapper}>
           <div className={styles.topHeadingSection}>
-            <Link to={"/"}>
+            <Link to="/">
               <Button>Back</Button>
             </Link>
             <h1 className={styles.titleWrapper}>Select One Model</h1>
           </div>
-
           <h2 className={styles.subtitleText}>
             Select a Model from the list to start the Session.
           </h2>
-
           <div className={styles.selectModelWrapper}>
             {loading && <p className={styles.loadingText}>Loading Models...</p>}
             {!loading &&
@@ -78,7 +76,9 @@ function AskModel() {
                         {Array.isArray(models) &&
                           models.map((model) => (
                             <p key={model} className={styles.modelName}>
-                              <Link to={`/chat/${encodeURIComponent(model)}`}>
+                              <Link
+                                to={`/chat/${encodeURIComponent(`${provider}/${creator}/${model}`)}`}
+                              >
                                 <Button>{model}</Button>
                               </Link>
                             </p>
