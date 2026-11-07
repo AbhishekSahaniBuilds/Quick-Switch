@@ -29,9 +29,9 @@ function Home() {
             </p>
             <p className={styles.metaDescription}>
               Engineered with a high-performance Python backend powered by
-              FastAPI, delivering low-latency model routing across Groq and
-              Google AI Studio. The responsive client application is crafted
-              using React and optimized for seamless real-time interactions.
+              FastAPI, delivering low-latency model routing across Groq. The
+              responsive client application is crafted using React and optimized
+              for seamless real-time interactions.
             </p>
             <div className={styles.metaLinks}>
               <a

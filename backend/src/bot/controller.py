@@ -5,11 +5,6 @@ import src.groq_api.get_models as get_groq_models_module
 import src.groq_api.send_receive_groq as sr_groq
 import src.groq_api.connect_disconnect_groq as cd_groq
 
-# gemini
-import src.gemini_api.get_models as get_gemini_models_module
-import src.gemini_api.send_receive_gemini as sr_gemini
-import src.gemini_api.connect_disconnect_gemini as cd_gemini
-
 # get all models
 model_list: dict = None
 
@@ -24,14 +19,6 @@ def get_llms():
             model_list["Groq"] = groq_models
         except Exception:
             pass
-
-        # Gemini Models
-        try:
-            gemini_models = get_gemini_models_module.get_gemini_models()
-            model_list["Gemini"] = gemini_models
-        except Exception:
-            pass
-
     except Exception as e:
         return {"succeed": 0, "error": str(e)}
     else:
@@ -46,8 +33,8 @@ def sr_models(discription: bot_dto.PromptModel) -> dict:
         prompt = discription.prompt
         sys_prompt = discription.sys_prompt
 
+        # Groq
         if provider == "groq":
-            # Groq requires the owner prefix string format (e.g., "openai/gpt-oss-120b")
             if owner and not discription.model.startswith(f"{owner}/"):
                 full_model_name = f"{owner}/{discription.model}"
             else:
@@ -75,28 +62,6 @@ def sr_models(discription: bot_dto.PromptModel) -> dict:
                 return {
                     "succeed": 0,
                     "error": response.get("error", "something went wrong"),
-                }
-
-        elif provider == "gemini":
-            full_model_name = discription.model
-            if full_model_name.startswith("google/"):
-                full_model_name = full_model_name.replace("google/", "")
-
-            response = sr_gemini.send_prompt(
-                client=cd_gemini.client,
-                model=full_model_name,
-                temperature=temperature,
-                prompt=prompt,
-                sys_prompt=sys_prompt,
-            )
-            if response.get("succeed"):
-                output = response.get("output")
-                content = output.text
-                return {"succeed": 1, "output": content}
-            else:
-                return {
-                    "succeed": 0,
-                    "error": response.get("error"),
                 }
 
         else:
