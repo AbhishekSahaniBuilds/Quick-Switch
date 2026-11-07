@@ -11,8 +11,7 @@ const router = createBrowserRouter(
       element: <Home />,
     },
     {
-      //  Updated to match the three distinct parameter tokens
-      path: "/chat/:provider/:creator/:modelId",
+      path: "/chat/:provider/:creator/:modelId/:modelName",
       element: <Chat />,
     },
     {

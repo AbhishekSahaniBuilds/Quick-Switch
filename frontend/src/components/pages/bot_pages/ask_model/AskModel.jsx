@@ -83,11 +83,9 @@ function AskModel() {
                         <div className={styles.modelList}>
                           {Array.isArray(models) &&
                             models.map((model, index) => {
-                              // Extracts entries from the { name: id } object
                               const entries = Object.entries(model);
                               if (entries.length === 0) return null;
 
-                              // Safely reads the name (key) and id (value)
                               const [modelName, modelId] = entries[0];
 
                               return (
@@ -96,7 +94,7 @@ function AskModel() {
                                   className={styles.modelName}
                                 >
                                   <Link
-                                    to={`/chat/${encodeURIComponent(provider)}/${encodeURIComponent(creator)}/${encodeURIComponent(modelId)}`}
+                                    to={`/chat/${encodeURIComponent(provider)}/${encodeURIComponent(creator)}/${encodeURIComponent(modelId)}/${encodeURIComponent(modelName)}`}
                                   >
                                     <Button>{modelName}</Button>
                                   </Link>
