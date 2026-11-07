@@ -12,7 +12,35 @@ export const fetch_get_models = async () => {
     if (response.data["succeed"]) {
       return { succeed: 1, output: response.data["output"] };
     } else {
-      return { succeed: 0, error: "something went wrong" };
+      return { succeed: 0, error: response.data["error"] };
+    }
+  } catch (error) {
+    return { succeed: 0, output: error };
+  }
+};
+
+export const fetch_prompt = async (
+  provider,
+  owner,
+  model,
+  temperature = 0.7,
+  prompt,
+  sys_prompt,
+) => {
+  try {
+    let promptInfo = {
+      provider: provider,
+      owner: owner,
+      model: model,
+      temperature: temperature,
+      prompt: prompt,
+      sys_prompt: sys_prompt,
+    };
+    const response = await api_client.post(`${bot_route}prompt`, promptInfo);
+    if (response.data["succeed"]) {
+      return { succeed: 1, output: response.data["output"] };
+    } else {
+      return { succeed: 0, error: response.data["error"] };
     }
   } catch (error) {
     return { succeed: 0, output: error };

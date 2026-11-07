@@ -35,39 +35,42 @@ def sr_models(discription: bot_dto.PromptModel) -> dict:
 
         # Groq
         if provider == "groq":
-            if owner and not discription.model.startswith(f"{owner}/"):
-                full_model_name = f"{owner}/{discription.model}"
-            else:
-                full_model_name = discription.model
-
-            response = sr_groq.send_prompt(
-                client=cd_groq.client,
-                model=full_model_name,
-                temperature=temperature,
-                prompt=prompt,
-                sys_prompt=sys_prompt,
-            )
-            if response.get("succeed"):
-                output = response.get("output")
-
-                if isinstance(output, dict) and "choices" in output:
-                    content = output["choices"][0]["message"]["content"]
-                elif hasattr(output, "choices"):
-                    content = output.choices[0].message.content
+            try:
+                if owner and not discription.model.startswith(f"{owner}/"):
+                    full_model_name = f"{owner}/{discription.model}"
                 else:
-                    content = output
+                    full_model_name = discription.model
 
-                return {"succeed": 1, "output": content}
-            else:
-                return {
-                    "succeed": 0,
-                    "error": response.get("error", "something went wrong"),
-                }
+                response = sr_groq.send_prompt(
+                    client=cd_groq.client,
+                    model=full_model_name,
+                    temperature=temperature,
+                    prompt=prompt,
+                    sys_prompt=sys_prompt,
+                )
+                if response.get("succeed"):
+                    output = response.get("output")
+
+                    if isinstance(output, dict) and "choices" in output:
+                        content = output["choices"][0]["message"]["content"]
+                    elif hasattr(output, "choices"):
+                        content = output.choices[0].message.content
+                    else:
+                        content = output
+
+                    return {"succeed": 1, "output": content}
+                else:
+                    return {
+                        "succeed": 0,
+                        "error": response.get("error", "something went wrong"),
+                    }
+            except:
+                pass
 
         else:
             return {
                 "succeed": 0,
-                "error": f"Unknown provider: {provider}. Choose 'groq' or 'gemini'.",
+                "error": f"Unknown provider: {provider}. Choose Groq",
             }
 
     except Exception as e:
