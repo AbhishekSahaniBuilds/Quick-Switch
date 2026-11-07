@@ -1,23 +1,32 @@
 import { useParams } from "react-router-dom";
 
 function Chat() {
-  const { modelInfo } = useParams();
+  // Pull variables immediately using destructured syntax from React Router
+  const { provider, creator, modelId } = useParams();
 
-  const modelInfoDecoded = modelInfo ? decodeURIComponent(modelInfo) : "";
-
-  const [modelProvider, modelOwner, selectedModel] = modelInfoDecoded
-    ? modelInfoDecoded.split("/")
-    : ["", "", ""];
+  // Safely decode the tokens in case they contain encoded spaces or symbols
+  const activeModel = modelId ? decodeURIComponent(modelId) : "Unknown Model";
+  const activeProvider = provider
+    ? decodeURIComponent(provider)
+    : "Unknown Provider";
+  const activeCreator = creator
+    ? decodeURIComponent(creator)
+    : "Unknown Creator";
 
   return (
-    <div>
-      <h1>--Under Development--</h1>
+    <div className="chat-container">
+      <h2>--Under Development--</h2>
       <h1>Chat Session</h1>
+
       <p>
-        Active Model: <strong>{selectedModel || "None Selected"}</strong>
+        <strong>Active Model:</strong> {activeModel}
       </p>
-      <p>Provider: {modelProvider}</p>
-      <p>Creator/Owner: {modelOwner}</p>
+      <p>
+        <strong>Provider:</strong> {activeProvider}
+      </p>
+      <p>
+        <strong>Creator/Owner:</strong> {activeCreator}
+      </p>
     </div>
   );
 }

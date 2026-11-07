@@ -12,11 +12,12 @@ def get_groq_models():
                 for model in output_list[0][1]:
                     model_dict = dict(model)
                     owner = model_dict.get("owned_by")
-                    name = model_dict.get("name")
+                    model_id = model_dict.get("id")
+                    model_name = model_dict.get("name")
                     if owner in groq_models:
-                        groq_models[owner].append(name)
+                        groq_models[owner].append({model_name: model_id})
                     else:
-                        groq_models[owner] = [name]
+                        groq_models[owner] = [{model_name: model_id}]
 
     except Exception:
         pass

@@ -16,12 +16,11 @@ function AskModel() {
         const response = await fetch_get_models();
 
         if (!response["succeed"]) {
-          setError("internal_error"); // Wrapped in strings to prevent ReferenceError
+          setError("internal_error");
           return;
         }
 
         modelListRef.current = response;
-        // FIX: Changed from response.output?.output to just response.output
         setModelList(response.output || {});
       } catch (err) {
         setError("failed_to_load");
@@ -83,15 +82,27 @@ function AskModel() {
 
                         <div className={styles.modelList}>
                           {Array.isArray(models) &&
-                            models.map((model) => (
-                              <p key={model} className={styles.modelName}>
-                                <Link
-                                  to={`/chat/${encodeURIComponent(`${provider}/${creator}/${model}`)}`}
+                            models.map((model, index) => {
+                              // Extracts entries from the { name: id } object
+                              const entries = Object.entries(model);
+                              if (entries.length === 0) return null;
+
+                              // Safely reads the name (key) and id (value)
+                              const [modelName, modelId] = entries[0];
+
+                              return (
+                                <p
+                                  key={modelId || index}
+                                  className={styles.modelName}
                                 >
-                                  <Button>{model}</Button>
-                                </Link>
-                              </p>
-                            ))}
+                                  <Link
+                                    to={`/chat/${encodeURIComponent(provider)}/${encodeURIComponent(creator)}/${encodeURIComponent(modelId)}`}
+                                  >
+                                    <Button>{modelName}</Button>
+                                  </Link>
+                                </p>
+                              );
+                            })}
                         </div>
                       </div>
                     ))}
