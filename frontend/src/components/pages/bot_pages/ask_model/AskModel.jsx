@@ -34,7 +34,12 @@ function AskModel() {
       <div className={styles.pageWrapper}>
         <div className={styles.contentContainer}>
           <div className={styles.contentWrapper}>
-            <h1 className={styles.titleWrapper}>Something Went Wrong!</h1>
+            <div className={styles.topHeadingSection}>
+              <Link to={"/"}>
+                <Button>Back</Button>
+              </Link>
+              <h1 className={styles.titleWrapper}>Something Went Wrong!</h1>
+            </div>
             <h2 className={styles.subtitleText}>
               Some internal error has occurred. Please try again later.
             </h2>
