@@ -46,3 +46,31 @@ export const fetch_prompt = async (
     return { succeed: 0, output: error };
   }
 };
+
+export const fetch_prompt_with_memory = async (
+  provider,
+  owner,
+  model,
+  temperature = 0.7,
+  messages, // Pass the full conversation array here
+) => {
+  try {
+    let promptInfo = {
+      provider: provider,
+      owner: owner,
+      model: model,
+      temperature: temperature,
+      messages: messages, // Send the array to your backend
+    };
+
+    const response = await api_client.post(`${bot_route}prompt`, promptInfo);
+
+    if (response.data["succeed"]) {
+      return { succeed: 1, output: response.data["output"] };
+    } else {
+      return { succeed: 0, error: response.data["error"] };
+    }
+  } catch (error) {
+    return { succeed: 0, error: error.message || error };
+  }
+};

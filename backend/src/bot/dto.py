@@ -1,10 +1,12 @@
 from pydantic import BaseModel
+from typing import Optional, List, Dict, Any
 
 
 class PromptModel(BaseModel):
     provider: str
-    owner: str
     model: str
-    temperature: float | int = 0.7
-    prompt: str
-    sys_prompt: str
+    temperature: float
+    owner: Optional[str] = ""
+    prompt: Optional[str] = None
+    sys_prompt: Optional[str] = None
+    messages: Optional[List[Dict[str, Any]]] = None

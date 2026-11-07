@@ -30,17 +30,25 @@ def sr_models(discription: bot_dto.PromptModel) -> dict:
         provider = discription.provider.lower()
         owner = discription.owner.lower() if discription.owner else ""
         temperature = discription.temperature
-        prompt = discription.prompt
-        sys_prompt = discription.sys_prompt
 
-        # Groq
+        prompt = getattr(discription, "prompt", None)
+        sys_prompt = getattr(discription, "sys_prompt", None)
+        messages = getattr(discription, "messages", None)
+
         if provider == "groq":
-            try:
-                if owner and not discription.model.startswith(f"{owner}/"):
-                    full_model_name = f"{owner}/{discription.model}"
-                else:
-                    full_model_name = discription.model
+            if owner and not discription.model.startswith(f"{owner}/"):
+                full_model_name = f"{owner}/{discription.model}"
+            else:
+                full_model_name = discription.model
 
+            if messages is not None:
+                response = sr_groq.send_prompt_with_history(
+                    client=cd_groq.client,
+                    model=full_model_name,
+                    temperature=temperature,
+                    messages=messages,
+                )
+            else:
                 response = sr_groq.send_prompt(
                     client=cd_groq.client,
                     model=full_model_name,
@@ -48,24 +56,23 @@ def sr_models(discription: bot_dto.PromptModel) -> dict:
                     prompt=prompt,
                     sys_prompt=sys_prompt,
                 )
-                if response.get("succeed"):
-                    output = response.get("output")
 
-                    if isinstance(output, dict) and "choices" in output:
-                        content = output["choices"][0]["message"]["content"]
-                    elif hasattr(output, "choices"):
-                        content = output.choices[0].message.content
-                    else:
-                        content = output
-
-                    return {"succeed": 1, "output": content}
+            if response.get("succeed"):
+                output = response.get("output")
+                if isinstance(output, dict) and "choices" in output:
+                    content = output["choices"][0]["message"]["content"]
+                elif hasattr(output, "choices"):
+                    content = output.choices[0].message.content
                 else:
-                    return {
-                        "succeed": 0,
-                        "error": response.get("error", "something went wrong"),
-                    }
-            except:
-                pass
+                    content = output
+                return {"succeed": 1, "output": content}
+            else:
+                return {
+                    "succeed": 0,
+                    "error": response.get(
+                        "error", "something went wrong from Groq client invocation"
+                    ),
+                }
 
         else:
             return {
