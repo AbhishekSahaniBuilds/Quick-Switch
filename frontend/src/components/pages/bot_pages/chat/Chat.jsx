@@ -24,11 +24,11 @@ function Chat() {
 
   const [inputText, setInputText] = useState("");
   const [temperature, setTemperature] = useState("0.7");
-  const [sysPrompt, setSysPrompt] = useState("You are a teacher.");
+  const [sysPrompt, setSysPrompt] = useState("You are a helpful Chat-Bot.");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const [messages, setMessages] = useState([
-    { role: "system", content: "You are a teacher." },
+    { role: "system", content: "You are a helpful Chat-Bot." },
   ]);
 
   const [isLoading, setIsLoading] = useState(false);
