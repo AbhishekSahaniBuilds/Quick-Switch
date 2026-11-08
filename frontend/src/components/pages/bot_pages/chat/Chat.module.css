@@ -1,0 +1,473 @@
+.chatContainer {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  height: 100vh;
+  width: 100vw;
+  background-color: #f5f0e6;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+}
+
+.sidebar {
+  height: 100%;
+  background-color: #fcfbfa;
+  border-right: 1px solid #e6dec9;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #e6dec9;
+  border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: #cbd5e1;
+}
+
+.modelHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #e6dec9;
+}
+
+.modelHeader h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #2c251e;
+  word-break: break-word;
+}
+
+.metaBadge {
+  align-self: flex-start;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: #e6dec9;
+  color: #5c4d3c;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.configGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.configGroup label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #5c4d3c;
+}
+
+.configGroup textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #334155;
+  font-family: inherit;
+  font-size: 0.9rem;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.configGroup textarea:focus {
+  outline: none;
+  border-color: #94a3b8;
+}
+
+.configGroup input[type="range"] {
+  width: 100%;
+  margin: 0.5rem 0;
+  cursor: pointer;
+}
+
+.clearBtn {
+  margin-top: auto;
+  margin-bottom: 0.5rem;
+  padding: 0.6rem;
+  background-color: transparent;
+  color: #b91c1c;
+  border: 1px solid #fee2e2;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.clearBtn:hover {
+  background-color: #fef2f2;
+  border-color: #fca5a5;
+}
+
+.sidebar a {
+  text-decoration: none;
+}
+
+.sidebar a button {
+  width: 100%;
+}
+
+.chatMain {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+/* Hidden on desktop views */
+.mobileNavbar {
+  display: none;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: #fcfbfa;
+  border-bottom: 1px solid #e6dec9;
+}
+
+.menuTrigger {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 24px;
+  height: 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dash {
+  width: 24px;
+  height: 2px;
+  background-color: #2c251e;
+  border-radius: 2px;
+}
+
+.mobileTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c251e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.overlay {
+  display: none;
+}
+
+.messagesWindow {
+  flex-grow: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: #faf9f6;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.messagesWindow::-webkit-scrollbar {
+  width: 8px;
+}
+
+.messagesWindow::-webkit-scrollbar-track {
+  background: #fdfbf7;
+}
+
+.messagesWindow::-webkit-scrollbar-thumb {
+  background-color: #e6dec9;
+  border-radius: 20px;
+  border: 2px solid #fdfbf7;
+}
+
+.messagesWindow::-webkit-scrollbar-thumb:hover {
+  background-color: #bfae93;
+}
+
+.messageRow {
+  display: flex;
+  width: 100%;
+}
+
+.messageRow.user {
+  justify-content: flex-end;
+}
+
+.messageRow.assistant {
+  justify-content: flex-start;
+}
+
+.messageRow.system {
+  justify-content: center;
+}
+
+.bubble {
+  max-width: 70%;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.bubble p {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.bubble p + p {
+  margin-top: 0.6rem;
+}
+
+.user .bubble {
+  background-color: #2c251e;
+  color: #ffffff;
+  border-bottom-right-radius: 2px;
+}
+
+.assistant .bubble {
+  background-color: #f1ede4;
+  color: #2c251e;
+  border-bottom-left-radius: 2px;
+}
+
+.system .bubble {
+  max-width: 85%;
+  background-color: #f1f5f9;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-style: italic;
+  border-radius: 6px;
+  border: 1px dashed #cbd5e1;
+  box-shadow: none;
+}
+
+.inputAreaContainer {
+  padding: 1rem 1.5rem 1.5rem 1.5rem;
+  background-color: #ffffff;
+  border-top: 1px solid #f1ede4;
+}
+
+.errorMessage {
+  background-color: #fef2f2;
+  color: #b91c1c;
+  font-size: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+  border: 1px solid #fee2e2;
+}
+
+.inputForm {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.chatInput {
+  flex-grow: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #334155;
+  background-color: #fff;
+  transition: border-color 0.15s ease;
+}
+
+.chatInput:focus {
+  outline: none;
+  border-color: #2c251e;
+}
+
+.chatInput:disabled {
+  background-color: #f8fafc;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.loadingBubble {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  background-color: #5c4d3c;
+  border-radius: 50%;
+  animation: pulse 1.4s infinite ease-in-out both;
+}
+
+.dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+.dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes pulse {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+    opacity: 0.3;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 
+==========================================================================
+   Responsive Smartphone
+========================================================================== 
+*/
+@media (max-width: 768px) {
+  .chatContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 280px;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .sidebarActive {
+    transform: translateX(0);
+  }
+
+  .mobileNavbar {
+    display: flex;
+  }
+
+  .overlay {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 99;
+  }
+
+  .bubble {
+    max-width: 85%;
+  }
+}
+/*==================================
+Code Area  
+==================================*/
+
+.codeBlockWrapper {
+  margin: 12px 0;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #333333;
+  background-color: #1e1e1e;
+  font-family: "Courier New", Courier, monospace;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.codeBlockHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2d2d2d;
+  padding: 6px 12px;
+  color: #aaaaaa;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-bottom: 1px solid #333333;
+}
+
+.codeBlockPre {
+  margin: 0;
+  padding: 12px 12px 4px 12px;
+  overflow-x: auto;
+  background-color: #1e1e1e;
+}
+
+.codeBlockPre code {
+  color: #d4d4d4;
+  font-size: 0.9rem;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.codeBlockFooter {
+  display: flex;
+  justify-content: flex-end;
+  background-color: #1e1e1e;
+  padding: 4px 8px 8px 8px;
+}
+
+.copyButton {
+  background-color: #2d2d2d;
+  color: #cccccc;
+  border: 1px solid #444444;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+  font-family: inherit;
+}
+
+.copyButton:hover {
+  background-color: #3d3d3d;
+  color: #ffffff;
+}
+
+.copyButton:active {
+  background-color: #1a1a1a;
+}

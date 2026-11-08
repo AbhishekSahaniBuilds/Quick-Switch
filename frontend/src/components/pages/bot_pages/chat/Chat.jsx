@@ -1,7 +1,12 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { fetch_prompt_with_memory } from "../.././../../services/bot_api";
 import { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import rehypeRaw from "rehype-raw";
 import Button from ".././../../global/button/Button";
+import styles from "./Chat.module.css";
 
 function Chat() {
   const { provider, creator, modelId, modelName } = useParams();
@@ -20,6 +25,7 @@ function Chat() {
   const [inputText, setInputText] = useState("");
   const [temperature, setTemperature] = useState("0.7");
   const [sysPrompt, setSysPrompt] = useState("You are a teacher.");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const [messages, setMessages] = useState([
     { role: "system", content: "You are a teacher." },
@@ -27,24 +33,58 @@ function Chat() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [copiedIndex, setCopiedIndex] = useState(null);
 
-  // Ref hook allocated for container autoscroll indexing
   const messagesEndRef = useRef(null);
 
-  // Auto-scroll pipeline effect trigger
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
 
-  // Simple parser function helper to render basic markdown bold blocks (**text**)
-  const renderMessageContent = (text) => {
-    const parts = text.split(/(\*\*.*?\*\*)/g);
-    return parts.map((part, index) => {
-      if (part.startsWith("**") && part.endsWith("**")) {
-        return <strong key={index}>{part.slice(2, -2)}</strong>;
+  const formatLLMText = (text) => {
+    if (!text) return "";
+    return text
+      .replace(/\\\[([\s\S]*?)\\\]/g, "$$$1$$$")
+      .replace(
+        /\[\s*(\\(?:delta|gamma|mu|pi|tau|alpha|beta|sigma|theta|lambda|omega|phi|psi|rho)|[0-9.+\-*/^=_\s]+)\s*\]/g,
+        "$$$1$$$",
+      )
+      .replace(/\\\(([\s\S]*?)\\\)/g, "$$1$");
+  };
+
+  const handleCopyCode = async (codeText, uniqueId) => {
+    try {
+      await navigator.clipboard.writeText(codeText);
+      setCopiedIndex(uniqueId);
+      setTimeout(() => setCopiedIndex(null), 2000);
+    } catch (err) {
+      setErrorMessage("Failed to copy code to clipboard.");
+    }
+  };
+
+  const streamResponse = (fullText) => {
+    let currentText = "";
+    let index = 0;
+
+    setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+
+    const interval = setInterval(() => {
+      if (index < fullText.length) {
+        currentText += fullText[index];
+        index++;
+        setMessages((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1] = {
+            ...updated[updated.length - 1],
+            content: currentText,
+          };
+          return updated;
+        });
+      } else {
+        clearInterval(interval);
+        setIsLoading(false);
       }
-      return part;
-    });
+    }, 5);
   };
 
   const handleFetchPrompt = async (e) => {
@@ -79,22 +119,20 @@ function Chat() {
       );
 
       if (response && response.succeed === 1) {
-        setMessages((prev) => [
-          ...prev,
-          { role: "assistant", content: response.output },
-        ]);
+        streamResponse(response.output);
       } else if (response && response.error) {
         setErrorMessage(
           typeof response.error === "object"
             ? JSON.stringify(response.error)
             : response.error,
         );
+        setIsLoading(false);
       } else {
         setErrorMessage("Received unexpected data format from backend.");
+        setIsLoading(false);
       }
     } catch (error) {
       setErrorMessage("Failed to load response from backend API.");
-    } finally {
       setIsLoading(false);
     }
   };
@@ -112,86 +150,182 @@ function Chat() {
     });
   };
 
-  // Reset thread clear event block handler
   const handleClearHistory = () => {
     setMessages([{ role: "system", content: sysPrompt }]);
     setErrorMessage("");
     setInputText("");
+    setIsSidebarOpen(false);
   };
 
   return (
-    <div className="chat-container">
-      <h2>--Under Development--</h2>
-      <h1>Chat Session</h1>
-      <p>
-        <strong>Active Model:</strong> {activeModel}
-      </p>
-      <p>
-        <strong>Provider:</strong> {activeProvider}
-      </p>
-      <p>
-        <strong>Creator/Owner:</strong> {activeCreator}
-      </p>
-      <p>
-        <strong>Name:</strong> {activeModelName}
-      </p>
+    <div className={styles.chatContainer}>
+      {isSidebarOpen && (
+        <div
+          className={styles.overlay}
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
 
-      <div className="input-form-container">
-        <div>
-          <label>System Prompt:</label>
+      <div
+        className={`${styles.sidebar} ${isSidebarOpen ? styles.sidebarActive : ""}`}
+      >
+        <div className={styles.modelHeader}>
+          <h2>{activeModelName}</h2>
+          <span className={styles.metaBadge}>{activeProvider}</span>
+          <span className={styles.metaBadge}>{activeCreator}</span>
+        </div>
+
+        <div className={styles.configGroup}>
+          <label>System Prompt</label>
           <textarea
             value={sysPrompt}
             onChange={(e) => handleSysPromptChange(e.target.value)}
+            rows={4}
           />
         </div>
 
-        <div>
-          <label>Temperature (0.0 - 2.0):</label>
+        <div className={styles.configGroup}>
+          <label>Temperature ({temperature})</label>
           <input
-            type="number"
-            step="0.1"
+            type="range"
             min="0"
             max="2"
+            step="0.1"
             value={temperature}
             onChange={(e) => setTemperature(e.target.value)}
           />
         </div>
 
-        {/* Reset Session Option Target */}
-        <div onClick={handleClearHistory} className="clear-history-action">
-          <Button>Clear Chat History</Button>
+        <button
+          type="button"
+          className={styles.clearBtn}
+          onClick={handleClearHistory}
+        >
+          Clear History
+        </button>
+
+        <Link to="/model" onClick={() => setIsSidebarOpen(false)}>
+          <Button>Choose another Model</Button>
+        </Link>
+      </div>
+
+      <div className={styles.chatMain}>
+        <div className={styles.mobileNavbar}>
+          <button
+            type="button"
+            className={styles.menuTrigger}
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            aria-label="Toggle Navigation Side Menu"
+          >
+            <div className={styles.dash}></div>
+            <div className={styles.dash}></div>
+            <div className={styles.dash}></div>
+          </button>
+          <span className={styles.mobileTitle}>{activeModelName}</span>
         </div>
-      </div>
 
-      <div className="chat-thread-window">
-        {messages
-          .filter((msg) => msg.role !== "system")
-          .map((msg, index) => (
-            <div key={index} className={`message-bubble ${msg.role}`}>
-              <strong className="message-sender">
-                {msg.role === "user" ? "You" : "Bot"}
-              </strong>
-              <p className="message-content">
-                {renderMessageContent(msg.content)}
-              </p>
+        <div className={styles.messagesWindow}>
+          {messages.map((msg, index) => {
+            if (msg.role === "system") return null;
+
+            return (
+              <div
+                key={index}
+                className={`${styles.messageRow} ${styles[msg.role]}`}
+              >
+                <div className={styles.bubble}>
+                  <ReactMarkdown
+                    remarkPlugins={[remarkMath]}
+                    rehypePlugins={[rehypeKatex, rehypeRaw]}
+                    components={{
+                      code({ inline, className, children, ...props }) {
+                        const match = /language-(\w+)/.exec(className || "");
+                        const lang = match ? match[1] : "";
+                        const rawCode = String(children).replace(/\n$/, "");
+                        const uniqueBlockId = `${index}-${rawCode.substring(0, 10)}`;
+
+                        const isInlineOrSmall =
+                          inline ||
+                          rawCode.toLowerCase() === "code" ||
+                          rawCode.toLowerCase() === "cmd" ||
+                          !rawCode.includes("\n");
+
+                        if (isInlineOrSmall) {
+                          return (
+                            <code className={className} {...props}>
+                              {children}
+                            </code>
+                          );
+                        }
+
+                        const displayedCode =
+                          lang.toLowerCase() === "whitespace"
+                            ? rawCode.replace(/ /g, "·").replace(/\t/g, "→\t")
+                            : rawCode;
+
+                        return (
+                          <div className={styles.codeBlockWrapper}>
+                            <div className={styles.codeBlockHeader}>
+                              <span>{lang || "code"}</span>
+                            </div>
+                            <pre className={styles.codeBlockPre} {...props}>
+                              <code className={className}>{displayedCode}</code>
+                            </pre>
+                            <div className={styles.codeBlockFooter}>
+                              <button
+                                type="button"
+                                className={styles.copyButton}
+                                onClick={() =>
+                                  handleCopyCode(rawCode, uniqueBlockId)
+                                }
+                              >
+                                {copiedIndex === uniqueBlockId
+                                  ? "Copied!"
+                                  : "🗐"}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      },
+                    }}
+                  >
+                    {formatLLMText(msg.content)}
+                  </ReactMarkdown>
+                </div>
+              </div>
+            );
+          })}
+
+          {isLoading && !messages[messages.length - 1]?.content && (
+            <div className={`${styles.messageRow} ${styles.assistant}`}>
+              <div className={`${styles.bubble} ${styles.loadingBubble}`}>
+                <div className={styles.dot}></div>
+                <div className={styles.dot}></div>
+                <div className={styles.dot}></div>
+              </div>
             </div>
-          ))}
-        {isLoading && <div className="chat-loading">Bot is typing...</div>}
-        {/* Anchor point target container block element for scroll position tracking */}
-        <div ref={messagesEndRef} />
-      </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
 
-      {errorMessage && <div className="error-message">{errorMessage}</div>}
+        <div className={styles.inputAreaContainer}>
+          {errorMessage && (
+            <div className={styles.errorMessage}>{errorMessage}</div>
+          )}
 
-      <div className="input-action-container">
-        <textarea
-          placeholder="Type your message here..."
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          disabled={isLoading}
-        />
-        <div onClick={!isLoading ? handleFetchPrompt : undefined}>
-          <Button>{isLoading ? "Sending..." : "Send Message"}</Button>
+          <form onSubmit={handleFetchPrompt} className={styles.inputForm}>
+            <input
+              type="text"
+              className={styles.chatInput}
+              placeholder="Type a message..."
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              disabled={isLoading}
+            />
+            <Button type="submit" disabled={isLoading}>
+              Send
+            </Button>
+          </form>
         </div>
       </div>
     </div>
