@@ -146,7 +146,28 @@
   overflow: hidden;
 }
 
-/* Hidden on desktop views */
+.welcomeText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.75rem;
+  color: #2c251e;
+  letter-spacing: -0.02em;
+  padding: 3rem;
+  opacity: 0.9;
+  animation: welcomeFadeIn 0.4s ease-out;
+}
+.welcomeText:state(show) {
+  display: inline;
+}
+.welcomeText:state(hide) {
+  display: none;
+}
+
 .mobileNavbar {
   display: none;
   align-items: center;
@@ -320,7 +341,19 @@
   color: #94a3b8;
   cursor: not-allowed;
 }
-
+.bottomInfoText {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #8c7e6c;
+  text-align: center;
+  padding: 0.5rem 1rem 0.1rem 1rem;
+  background-color: #ffffff;
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
 .loadingBubble {
   display: flex;
   align-items: center;
@@ -399,13 +432,12 @@
     max-width: 85%;
   }
 }
-/*==================================
-Code Area  
-==================================*/
-
+/* ==========================================
+   CODE BLOCKS AREA 
+   ========================================== */
 .codeBlockWrapper {
-  margin: 12px 0;
-  border-radius: 6px;
+  margin: 16px 0;
+  border-radius: 8px;
   overflow: hidden;
   border: 1px solid #333333;
   background-color: #1e1e1e;
@@ -413,6 +445,7 @@ Code Area
   position: relative;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .codeBlockHeader {
@@ -420,17 +453,18 @@ Code Area
   justify-content: space-between;
   align-items: center;
   background-color: #2d2d2d;
-  padding: 6px 12px;
+  padding: 8px 14px;
   color: #aaaaaa;
   font-size: 0.8rem;
   text-transform: uppercase;
-  font-weight: bold;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   border-bottom: 1px solid #333333;
 }
 
 .codeBlockPre {
   margin: 0;
-  padding: 12px 12px 4px 12px;
+  padding: 14px;
   overflow-x: auto;
   background-color: #1e1e1e;
 }
@@ -440,34 +474,125 @@ Code Area
   font-size: 0.9rem;
   background: transparent !important;
   padding: 0 !important;
+  line-height: 1.5;
 }
 
 .codeBlockFooter {
   display: flex;
   justify-content: flex-end;
   background-color: #1e1e1e;
-  padding: 4px 8px 8px 8px;
+  padding: 4px 14px 14px 14px;
 }
+
+/* ==========================================
+   MATH BOARD AREA
+   ========================================== */
+
+.mathBlockWrapper {
+  margin: 16px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #333333;
+  background-color: #f0fdf4;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.mathBlockHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #dcfce7;
+  padding: 8px 14px;
+  color: #166534;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #333333;
+}
+
+.mathBlockPre {
+  margin: 0;
+  padding: 14px;
+  overflow-x: auto;
+  background-color: #f0fdf4;
+  background-image:
+    linear-gradient(#e6f4ea 1px, transparent 1px),
+    linear-gradient(90deg, #e6f4ea 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.mathBlockPre code {
+  color: #1e293b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  font-family: "Consolas", "Courier New", monospace;
+  background: transparent !important;
+  padding: 0 !important;
+  font-weight: 600;
+}
+
+.mathBlockFooter {
+  display: flex;
+  justify-content: flex-end;
+  background-color: #f0fdf4;
+  padding: 4px 14px 14px 14px;
+}
+
+/* ==========================================
+   SHARED UI ACTIONS & INLINE SEGMENTS
+   ========================================== */
 
 .copyButton {
   background-color: #2d2d2d;
   color: #cccccc;
   border: 1px solid #444444;
   border-radius: 4px;
-  padding: 4px 10px;
+  padding: 5px 12px;
   font-size: 0.75rem;
+  font-weight: 600;
   cursor: pointer;
   transition:
     background-color 0.2s,
-    color 0.2s;
+    color 0.2s,
+    border-color 0.2s;
   font-family: inherit;
 }
 
 .copyButton:hover {
   background-color: #3d3d3d;
   color: #ffffff;
+  border-color: #555555;
 }
 
 .copyButton:active {
   background-color: #1a1a1a;
+}
+
+.mathBlockFooter .copyButton {
+  background-color: #ffffff;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.mathBlockFooter .copyButton:hover {
+  background-color: #dcfce7;
+  color: #14532d;
+  border-color: #86efac;
+}
+
+.mathBlockFooter .copyButton:active {
+  background-color: #bbf7d0;
+}
+
+code {
+  font-family: "Courier New", Courier, monospace;
+  background-color: #2d2d2d;
+  color: #e5c07b;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85rem;
 }

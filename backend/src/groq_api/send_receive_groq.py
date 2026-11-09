@@ -26,6 +26,7 @@ def send_prompt(
             ],
             temperature=temperature,
             max_tokens=1024,
+            frequency_penalty=0.5,
         )
     except Exception as e:
         return {"succeed": 0, "error": str(e)}
@@ -45,6 +46,7 @@ def send_prompt_with_history(
             messages=messages,
             temperature=temperature,
             max_tokens=1024,
+            frequency_penalty=0.5,
         )
     except Exception as e:
         return {"succeed": 0, "error": str(e)}

@@ -8,9 +8,36 @@ import rehypeRaw from "rehype-raw";
 import Button from ".././../../global/button/Button";
 import styles from "./Chat.module.css";
 
+const possibleWelcomeTexts = [
+  "Hello, How can I help you?",
+  "What is todays goal?",
+  "sqrt(-1) am a chat bot!",
+  "01001000 01100101 01101100 01101100 01101111 (That means Hello in binary).",
+  ".... . .-.. .-.. --- (That means Hello in Morse code)",
+  "Running thoughts.exe... How can I assist you today?",
+  "I'm online. You're online. Let's make some magic happen.",
+  "Welcome! What are we conquering today?",
+  "Let's turn your to-do list into a done list.",
+  "Ready to brainstorm? Hit me with your best ideas.",
+  "New day, new inputs. What's the game plan?",
+  "Plotting world domination, or just need a quick answer? I'm ready.",
+  "Oh, hey there! Glad you dropped by.",
+  "Tell me your secrets... or just what you need help with.",
+  "I have the answers. (Assuming you have the questions).",
+  "Let's skip the small talk. What can I do for you?",
+  "Greetings, human. What knowledge do you seek?",
+  "A glitch in the matrix brought you here. Welcome.",
+  "Loading your next great breakthrough...",
+];
+
+const getRandomWelcomeText = () => {
+  return possibleWelcomeTexts[
+    Math.floor(Math.random() * possibleWelcomeTexts.length)
+  ];
+};
+
 function Chat() {
   const { provider, creator, modelId, modelName } = useParams();
-
   const activeModel = modelId ? decodeURIComponent(modelId) : "Unknown Model";
   const activeProvider = provider
     ? decodeURIComponent(provider)
@@ -23,33 +50,91 @@ function Chat() {
     : "Unknown Name";
 
   const [inputText, setInputText] = useState("");
-  const [temperature, setTemperature] = useState("0.7");
+  const [temperature, setTemperature] = useState(0.7);
   const [sysPrompt, setSysPrompt] = useState("You are a helpful Chat-Bot.");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
   const [messages, setMessages] = useState([
     { role: "system", content: "You are a helpful Chat-Bot." },
   ]);
-
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [copiedIndex, setCopiedIndex] = useState(null);
+  const [welcomeState, setWelcomeState] = useState("hide");
+  const [welcomeTextInnerText, setWelcomeTextInnerText] =
+    useState(getRandomWelcomeText);
 
   const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setWelcomeState("show"), 50);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
 
+  const conversationStarted = messages.some((msg) => msg.role !== "system");
+
   const formatLLMText = (text) => {
     if (!text) return "";
+
+    const symbolMap = {
+      "\\images": "\\implies",
+      "\\Longrightarrow": "\\implies",
+      "\\Rightarrow": "\\implies",
+      "=>": "\\implies",
+      "->": "\\implies",
+      "\\rightarrow": "\\implies",
+      "\\Longleftrightarrow": "\\iff",
+      "\\Leftrightarrow": "\\iff",
+      "<=>": "\\iff",
+      "<->": "\\iff",
+      "\\longmapsto": "\\mapsto",
+      "\\mapsto": "\\mapsto",
+      "\\partial": "\\partial",
+      "d/dx": "\\partial",
+      "\\nabla": "\\nabla",
+      del: "\\nabla",
+      "\\hbar": "\\hbar",
+      "\\in": "\\in",
+      memberof: "\\in",
+      "\\notin": "\\in",
+      "\\subset": "\\subset",
+      "\\subseteq": "\\subseteq",
+      "\\forall": "\\forall",
+      "\\exists": "\\exists",
+      "\\times": "\\times",
+      "*": "\\times",
+      "\\*": "\\times",
+      "\\div": "\\div",
+      "\\pm": "\\pm",
+      "\\mp": "\\mp",
+      "\\neq": "\\neq",
+      "!=": "\\neq",
+      "\\approx": "\\approx",
+      "~": "\\approx",
+      "\\propto": "\\propto",
+      "\\cdot": "\\cdot",
+      "\\sum": "\\sum",
+      "\\prod": "\\prod",
+      "\\int": "\\int",
+      "\\oint": "\\oint",
+      "\\infty": "\\infty",
+      inf: "\\infty",
+    };
+
     return text
-      .replace(/\\\[([\s\S]*?)\\\]/g, "$$$1$$$")
+      .replace(/;;\s*(.*?)\s*;;/g, (match, p1) => {
+        const cleanKey = p1.trim();
+        return symbolMap[cleanKey] ? ` ${symbolMap[cleanKey]} ` : match;
+      })
       .replace(
-        /\[\s*(\\(?:delta|gamma|mu|pi|tau|alpha|beta|sigma|theta|lambda|omega|phi|psi|rho)|[0-9.+\-*/^=_\s]+)\s*\]/g,
-        "$$$1$$$",
+        /(?:\r?\n|^)\[\s*([\s\S]*?)\s*\](?:\r?\n|$)/g,
+        "\n\n$$$\n$1\n$$$\n\n",
       )
-      .replace(/\\\(([\s\S]*?)\\\)/g, "$$1$");
+      .replace(/\\\(([\s\S]*?)\\\)/g, "$$1$")
+      .replace(/\(([^)\n]*?\\[a-zA-Z0-9^_+=\-*/<>|]+[^)\n]*?)\)/g, "$$1$");
   };
 
   const handleCopyCode = async (codeText, uniqueId) => {
@@ -63,15 +148,16 @@ function Chat() {
   };
 
   const streamResponse = (fullText) => {
+    const tokens = fullText.split(/(\s+)/);
+    let tokenIndex = 0;
     let currentText = "";
-    let index = 0;
 
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
     const interval = setInterval(() => {
-      if (index < fullText.length) {
-        currentText += fullText[index];
-        index++;
+      if (tokenIndex < tokens.length) {
+        currentText += tokens[tokenIndex];
+        tokenIndex++;
         setMessages((prev) => {
           const updated = [...prev];
           updated[updated.length - 1] = {
@@ -84,26 +170,22 @@ function Chat() {
         clearInterval(interval);
         setIsLoading(false);
       }
-    }, 5);
+    }, 10);
   };
 
   const handleFetchPrompt = async (e) => {
     if (e) e.preventDefault();
-
     if (!inputText.trim()) {
       setErrorMessage("Error: Message cannot be empty.");
       return;
     }
-
     const tempFloat = parseFloat(temperature);
     if (isNaN(tempFloat) || tempFloat < 0 || tempFloat > 2) {
       setErrorMessage("Error: Temperature must be a number between 0 and 2.");
       return;
     }
-
     setErrorMessage("");
     setIsLoading(true);
-
     const userMessage = { role: "user", content: inputText };
     const updatedHistory = [...messages, userMessage];
     setMessages(updatedHistory);
@@ -117,7 +199,6 @@ function Chat() {
         tempFloat,
         updatedHistory,
       );
-
       if (response && response.succeed === 1) {
         streamResponse(response.output);
       } else if (response && response.error) {
@@ -155,8 +236,10 @@ function Chat() {
     setErrorMessage("");
     setInputText("");
     setIsSidebarOpen(false);
+    setWelcomeTextInnerText(getRandomWelcomeText());
+    setWelcomeState("hide");
+    setTimeout(() => setWelcomeState("show"), 50);
   };
-
   return (
     <div className={styles.chatContainer}>
       {isSidebarOpen && (
@@ -165,7 +248,6 @@ function Chat() {
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
-
       <div
         className={`${styles.sidebar} ${isSidebarOpen ? styles.sidebarActive : ""}`}
       >
@@ -208,8 +290,13 @@ function Chat() {
           <Button>Choose another Model</Button>
         </Link>
       </div>
-
       <div className={styles.chatMain}>
+        {!conversationStarted && (
+          <div className={styles.welcomeText} data-state={welcomeState}>
+            {welcomeTextInnerText}
+          </div>
+        )}
+
         <div className={styles.mobileNavbar}>
           <button
             type="button"
@@ -223,7 +310,6 @@ function Chat() {
           </button>
           <span className={styles.mobileTitle}>{activeModelName}</span>
         </div>
-
         <div className={styles.messagesWindow}>
           {messages.map((msg, index) => {
             if (msg.role === "system") return null;
@@ -240,21 +326,64 @@ function Chat() {
                     components={{
                       code({ inline, className, children, ...props }) {
                         const match = /language-(\w+)/.exec(className || "");
-                        const lang = match ? match[1] : "";
-                        const rawCode = String(children).replace(/\n$/, "");
+                        let lang = match ? match[1] : "";
+                        let rawCode = String(children).replace(/\n$/, "");
                         const uniqueBlockId = `${index}-${rawCode.substring(0, 10)}`;
 
                         const isInlineOrSmall =
                           inline ||
+                          !rawCode.includes("\n") ||
+                          rawCode.length <= 4 ||
                           rawCode.toLowerCase() === "code" ||
-                          rawCode.toLowerCase() === "cmd" ||
-                          !rawCode.includes("\n");
+                          rawCode.toLowerCase() === "cmd";
 
                         if (isInlineOrSmall) {
                           return (
                             <code className={className} {...props}>
                               {children}
                             </code>
+                          );
+                        }
+
+                        const cleanRaw = rawCode.trim();
+                        const isMathBoard =
+                          lang.toLowerCase() === "mathboard" ||
+                          lang.toLowerCase() === "math" ||
+                          cleanRaw.toLowerCase().startsWith("mathboard") ||
+                          cleanRaw.toLowerCase().startsWith("math");
+
+                        if (isMathBoard) {
+                          const displayedMathCode = cleanRaw
+                            .replace(/^mathboard\s*/i, "")
+                            .replace(/^math\s*/i, "");
+
+                          return (
+                            <div className={styles.mathBlockWrapper}>
+                              <div className={styles.mathBlockHeader}>
+                                <span>MATH BOARD</span>
+                              </div>
+                              <pre className={styles.mathBlockPre} {...props}>
+                                <code className={className}>
+                                  {displayedMathCode}
+                                </code>
+                              </pre>
+                              <div className={styles.mathBlockFooter}>
+                                <button
+                                  type="button"
+                                  className={styles.copyButton}
+                                  onClick={() =>
+                                    handleCopyCode(
+                                      displayedMathCode,
+                                      uniqueBlockId,
+                                    )
+                                  }
+                                >
+                                  {copiedIndex === uniqueBlockId
+                                    ? "Copied!"
+                                    : "🗐"}
+                                </button>
+                              </div>
+                            </div>
                           );
                         }
 
@@ -307,12 +436,10 @@ function Chat() {
           )}
           <div ref={messagesEndRef} />
         </div>
-
         <div className={styles.inputAreaContainer}>
           {errorMessage && (
             <div className={styles.errorMessage}>{errorMessage}</div>
           )}
-
           <form onSubmit={handleFetchPrompt} className={styles.inputForm}>
             <input
               type="text"
@@ -326,6 +453,10 @@ function Chat() {
               Send
             </Button>
           </form>
+          <p className={styles.bottomInfoText}>
+            Quick Switch is an AI assistant and may make mistakes • Do not share
+            personal information • All rights reserved.
+          </p>
         </div>
       </div>
     </div>
