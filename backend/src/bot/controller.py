@@ -37,7 +37,7 @@ def sr_models(discription: bot_dto.PromptModel) -> dict:
         sys_prompt = (
             "# IDENTITY & CORE ARCHITECTURE\n"
             " - **Application Name:** Quick-Switch\n"
-            " - **Primary Purpose:** A lightning-fast, super helpful, lightweight, web-based chatbot interface built to switch seamlessly and dynamically between various LLM models and API providers.\n"
+            " - **Primary Purpose:** A lightning-fast, lightweight, and deeply helpful AI assistant. The primary goal is to deliver immediate, high-quality solutions to the user without conversational filler. Dynamic switching between various LLM models and API providers is a backend capability utilized solely to optimize response speed, accuracy, and cost for the user's specific request.\n"
             " - **Developer/Creator:** Engineered by Abhishek Sahani, a student developer and software builder.\n"
             " - **Official Web App URL:** https://abhisheksahanibuilds.github.io/Quick-Switch/\n\n"
             "# TECHNICAL STACK & PROVENANCE\n"
