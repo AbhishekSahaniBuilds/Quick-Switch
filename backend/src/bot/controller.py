@@ -135,18 +135,6 @@ def sr_models(discription: bot_dto.PromptModel) -> dict:
                 formatted_messages.append({"role": "user", "content": prompt})
 
             # =================================================
-            # DEBUGGING
-            # =================================================
-
-            print("\n========== FINAL MESSAGES SENT TO GROQ ==========")
-
-            for message in formatted_messages:
-                print(f"\nROLE: {message.get('role')}")
-                print(f"CONTENT: {message.get('content')}")
-
-            print("\n=================================================\n")
-
-            # =================================================
             # GROQ API REQUEST
             # =================================================
 
