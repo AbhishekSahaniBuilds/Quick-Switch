@@ -75,59 +75,6 @@
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
 }
-.configGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.configGroup label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #5c4d3c;
-}
-
-.configGroup textarea {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  background-color: #fff;
-  color: #334155;
-  font-family: inherit;
-  font-size: 0.9rem;
-  resize: vertical;
-  box-sizing: border-box;
-}
-
-.configGroup textarea:focus {
-  outline: none;
-  border-color: #94a3b8;
-}
-
-.configGroup input[type="range"] {
-  width: 100%;
-  margin: 0.5rem 0;
-  cursor: pointer;
-}
-
-.clearBtn {
-  margin-top: auto;
-  margin-bottom: 0.5rem;
-  padding: 0.6rem;
-  background-color: transparent;
-  color: #b91c1c;
-  border: 1px solid #fee2e2;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.15s ease;
-}
-
-.clearBtn:hover {
-  background-color: #fef2f2;
-  border-color: #fca5a5;
-}
 
 .sidebar a {
   text-decoration: none;

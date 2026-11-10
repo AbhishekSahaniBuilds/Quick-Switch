@@ -224,10 +224,16 @@ function Chat() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState(() => {
-    return (
-      JSON.parse(localStorage.getItem("chat_history")) ||
-      JSON.parse(localStorage.getItem("system_prompts"))
-    );
+    try {
+      return (
+        JSON.parse(localStorage.getItem("chat_history")) ||
+        JSON.parse(localStorage.getItem("system_prompts")) || [
+          { role: "system", content: "You are a helpful Chat-Bot." },
+        ]
+      );
+    } catch {
+      return [{ role: "system", content: "You are a helpful Chat-Bot." }];
+    }
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -336,16 +342,6 @@ function Chat() {
     }
   };
 
-  const handleClearHistory = () => {
-    setMessages([{ role: "system", content: sysPrompt }]);
-    setErrorMessage("");
-    setInputText("");
-    setIsSidebarOpen(false);
-    setWelcomeTextInnerText(getRandomWelcomeText());
-    setWelcomeState("hide");
-    setTimeout(() => setWelcomeState("show"), 50);
-  };
-
   // --- Layout Template Node Tree Reflection ---
   return (
     <div className={styles.chatContainer}>
@@ -365,19 +361,15 @@ function Chat() {
           <span className={styles.metaBadge}>{activeCreator}</span>
         </div>
 
-        <Link to="/settings" onClick={() => setIsSidebarOpen(false)}>
-          <Button>Settings</Button>
-        </Link>
-        <button
-          type="button"
-          className={styles.clearBtn}
-          onClick={handleClearHistory}
-        >
-          Clear History
-        </button>
-        <Link to="/model" onClick={() => setIsSidebarOpen(false)}>
-          <Button>Choose another Model</Button>
-        </Link>
+        <div className={styles.sidebarButtons}>
+          <Link to="/settings" onClick={() => setIsSidebarOpen(false)}>
+            <Button>Settings</Button>
+          </Link>
+
+          <Link to="/model" onClick={() => setIsSidebarOpen(false)}>
+            <Button>Choose another Model</Button>
+          </Link>
+        </div>
       </div>
 
       <div className={styles.chatMain}>

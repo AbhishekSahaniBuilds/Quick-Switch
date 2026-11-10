@@ -37,6 +37,24 @@ function Settings() {
       return copy;
     });
   };
+  const handleClearHistory = () => {
+    const systemPrompts = JSON.parse(
+      localStorage.getItem("system_prompts"),
+    ) || [{ role: "system", content: "You are a helpful Chat-Bot." }];
+
+    setMessages(systemPrompts);
+
+    localStorage.removeItem("chat_history");
+
+    setErrorMessage("");
+    setInputText("");
+    setIsSidebarOpen(false);
+
+    setWelcomeTextInnerText(getRandomWelcomeText());
+    setWelcomeState("hide");
+
+    setTimeout(() => setWelcomeState("show"), 50);
+  };
 
   return (
     <div>
@@ -57,7 +75,6 @@ function Settings() {
           }}
         />
       </div>
-
       <div className={styles.configGroup}>
         <label>System Prompt</label>
         <textarea
@@ -65,8 +82,14 @@ function Settings() {
           onChange={(e) => handleSysPromptChange(e.target.value)}
           rows={4}
         />
-      </div>
-
+      </div>{" "}
+      <button
+        type="button"
+        className={styles.clearBtn}
+        onClick={handleClearHistory}
+      >
+        Clear History
+      </button>
       <div className={styles.metaDetailsContainer}>
         <div className={styles.metaLinks}>
           <a
