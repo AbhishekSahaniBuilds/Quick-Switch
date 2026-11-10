@@ -1,8 +1,13 @@
+/* ==========================================
+   GLOBAL CHAT LAYOUT
+========================================== */
+
 .chatContainer {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 280px minmax(0, 1fr);
   height: 100vh;
-  width: 100vw;
+  height: 100dvh;
+  width: 100%;
   background-color: #f5f0e6;
   box-sizing: border-box;
   overflow: hidden;
@@ -14,12 +19,17 @@
     "Segoe UI",
     Roboto,
     sans-serif;
+  color: #4a554a;
 }
+
+/* ==========================================
+   SIDEBAR
+========================================== */
 
 .sidebar {
   height: 100%;
-  background-color: #fcfbfa;
-  border-right: 1px solid #e6dec9;
+  background-color: #fcfbf8;
+  border-right: 1px solid rgba(200, 180, 138, 0.4);
   padding: 1.5rem;
   box-sizing: border-box;
   display: flex;
@@ -27,11 +37,17 @@
   gap: 1.5rem;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
+  scrollbar-color: #c9c0ae transparent;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 100;
 }
 
+.sidebarButtons {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 .sidebar::-webkit-scrollbar {
   width: 6px;
 }
@@ -41,40 +57,46 @@
 }
 
 .sidebar::-webkit-scrollbar-thumb {
-  background-color: #e6dec9;
+  background-color: #ded5c5;
   border-radius: 10px;
 }
 
 .sidebar::-webkit-scrollbar-thumb:hover {
-  background-color: #cbd5e1;
+  background-color: #b9ad96;
 }
+
+/* Sidebar Header */
 
 .modelHeader {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.6rem;
   padding-bottom: 1.25rem;
-  border-bottom: 1px solid #e6dec9;
+  border-bottom: 1px solid rgba(200, 180, 138, 0.4);
 }
 
 .modelHeader h2 {
   margin: 0;
   font-size: 1.25rem;
-  color: #2c251e;
+  font-weight: 700;
+  color: #1e3b2f;
+  letter-spacing: -0.3px;
   word-break: break-word;
 }
 
 .metaBadge {
   align-self: flex-start;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.7rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  background-color: #e6dec9;
-  color: #5c4d3c;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  background-color: #e9eee5;
+  color: #55765e;
+  padding: 5px 9px;
+  border-radius: 5px;
 }
+
+/* Sidebar Links */
 
 .sidebar a {
   text-decoration: none;
@@ -84,13 +106,22 @@
   width: 100%;
 }
 
+/* ==========================================
+   MAIN CHAT AREA
+========================================== */
+
 .chatMain {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   height: 100%;
   background-color: #ffffff;
   overflow: hidden;
 }
+
+/* ==========================================
+   WELCOME SCREEN
+========================================== */
 
 .welcomeText {
   display: flex;
@@ -100,27 +131,46 @@
   flex-grow: 1;
   text-align: center;
   font-weight: 700;
-  font-size: 1.75rem;
-  color: #2c251e;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.4rem, 3vw, 1.85rem);
+  color: #1e3b2f;
+  letter-spacing: -0.5px;
   padding: 3rem;
-  opacity: 0.9;
+  opacity: 0.95;
   animation: welcomeFadeIn 0.4s ease-out;
 }
-.welcomeText:state(show) {
-  display: inline;
+
+.welcomeText.show {
+  display: flex;
 }
-.welcomeText:state(hide) {
+
+.welcomeText.hide {
   display: none;
 }
+
+@keyframes welcomeFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 0.95;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================
+   MOBILE NAVIGATION
+========================================== */
 
 .mobileNavbar {
   display: none;
   align-items: center;
   gap: 1rem;
-  padding: 0.75rem 1rem;
-  background-color: #fcfbfa;
-  border-bottom: 1px solid #e6dec9;
+  padding: 0.85rem 1.1rem;
+  background-color: #fcfbf8;
+  border-bottom: 1px solid rgba(200, 180, 138, 0.4);
+  flex-shrink: 0;
 }
 
 .menuTrigger {
@@ -128,7 +178,7 @@
   flex-direction: column;
   justify-content: space-around;
   width: 24px;
-  height: 18px;
+  height: 20px;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -138,33 +188,46 @@
 .dash {
   width: 24px;
   height: 2px;
-  background-color: #2c251e;
+  background-color: #1e3b2f;
   border-radius: 2px;
+  transition: background-color 0.2s ease;
+}
+
+.menuTrigger:hover .dash {
+  background-color: #7f8c6a;
 }
 
 .mobileTitle {
   font-size: 1rem;
-  font-weight: 600;
-  color: #2c251e;
+  font-weight: 700;
+  color: #1e3b2f;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+/* Sidebar Overlay */
+
 .overlay {
   display: none;
 }
 
+/* ==========================================
+   MESSAGES WINDOW
+========================================== */
+
 .messagesWindow {
   flex-grow: 1;
-  padding: 1.5rem;
+  min-height: 0;
+  padding: 1.75rem clamp(1rem, 4vw, 3rem);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  background-color: #faf9f6;
+  gap: 1.25rem;
+  background-color: #fdfcf9;
   scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
+  scrollbar-color: #c9c0ae transparent;
+  scroll-behavior: smooth;
 }
 
 .messagesWindow::-webkit-scrollbar {
@@ -172,22 +235,25 @@
 }
 
 .messagesWindow::-webkit-scrollbar-track {
-  background: #fdfbf7;
+  background: #fdfcf9;
 }
 
 .messagesWindow::-webkit-scrollbar-thumb {
-  background-color: #e6dec9;
+  background-color: #ded5c5;
   border-radius: 20px;
-  border: 2px solid #fdfbf7;
+  border: 2px solid #fdfcf9;
 }
 
 .messagesWindow::-webkit-scrollbar-thumb:hover {
-  background-color: #bfae93;
+  background-color: #b9ad96;
 }
+
+/* Message Alignment */
 
 .messageRow {
   display: flex;
   width: 100%;
+  animation: messageFadeIn 0.2s ease-out;
 }
 
 .messageRow.user {
@@ -202,13 +268,30 @@
   justify-content: center;
 }
 
+@keyframes messageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================
+   MESSAGE BUBBLES
+========================================== */
+
 .bubble {
-  max-width: 70%;
-  padding: 0.75rem 1rem;
-  border-radius: 12px;
+  max-width: 75%;
+  padding: 0.9rem 1.15rem;
+  border-radius: 14px;
   font-size: 0.95rem;
-  line-height: 1.5;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  line-height: 1.65;
+  box-shadow: 0 2px 8px rgba(30, 59, 47, 0.04);
+  overflow-wrap: anywhere;
 }
 
 .bubble p {
@@ -218,46 +301,76 @@
 }
 
 .bubble p + p {
-  margin-top: 0.6rem;
+  margin-top: 0.7rem;
 }
+
+/* User Message */
 
 .user .bubble {
-  background-color: #2c251e;
+  background-color: #1e3b2f;
   color: #ffffff;
-  border-bottom-right-radius: 2px;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 3px 10px rgba(30, 59, 47, 0.12);
 }
 
+/* Assistant Message */
+
 .assistant .bubble {
-  background-color: #f1ede4;
-  color: #2c251e;
-  border-bottom-left-radius: 2px;
+  background-color: #f1eee6;
+  color: #34483a;
+  border: 1px solid rgba(200, 180, 138, 0.2);
+  border-bottom-left-radius: 4px;
 }
+
+/* System Message */
 
 .system .bubble {
   max-width: 85%;
-  background-color: #f1f5f9;
-  color: #64748b;
+  background-color: #edf2ea;
+  color: #647b63;
   font-size: 0.85rem;
   font-style: italic;
-  border-radius: 6px;
-  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  border: 1px dashed #c3d0bd;
   box-shadow: none;
 }
 
+/* Inline Code */
+
+.bubble code {
+  font-family: "Courier New", Courier, monospace;
+  background-color: rgba(127, 140, 106, 0.14);
+  color: #31533d;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+.user .bubble code {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+/* ==========================================
+   CHAT INPUT AREA
+========================================== */
+
 .inputAreaContainer {
-  padding: 1rem 1.5rem 1.5rem 1.5rem;
+  padding: 1rem 1.5rem 1.25rem;
   background-color: #ffffff;
-  border-top: 1px solid #f1ede4;
+  border-top: 1px solid rgba(200, 180, 138, 0.3);
+  flex-shrink: 0;
 }
 
 .errorMessage {
-  background-color: #fef2f2;
-  color: #b91c1c;
+  background-color: #fff3f0;
+  color: #a94442;
   font-size: 0.85rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
+  padding: 0.7rem 0.9rem;
+  border-radius: 8px;
   margin-bottom: 0.75rem;
-  border: 1px solid #fee2e2;
+  border: 1px solid #f1d0c8;
+  line-height: 1.5;
 }
 
 .inputForm {
@@ -268,49 +381,66 @@
 
 .chatInput {
   flex-grow: 1;
-  padding: 0.75rem 1rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
+  min-width: 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(200, 180, 138, 0.55);
+  border-radius: 10px;
   font-size: 0.95rem;
-  color: #334155;
-  background-color: #fff;
-  transition: border-color 0.15s ease;
+  color: #34483a;
+  background-color: #fdfcf9;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.chatInput::placeholder {
+  color: #a69d8e;
 }
 
 .chatInput:focus {
   outline: none;
-  border-color: #2c251e;
+  border-color: #7f8c6a;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(127, 140, 106, 0.12);
 }
 
 .chatInput:disabled {
-  background-color: #f8fafc;
-  color: #94a3b8;
+  background-color: #f5f3ee;
+  color: #a69d8e;
   cursor: not-allowed;
 }
+
+/* Bottom Information */
+
 .bottomInfoText {
   display: block;
   font-size: 0.75rem;
   font-weight: 500;
-  color: #8c7e6c;
+  color: #8c917b;
   text-align: center;
-  padding: 0.5rem 1rem 0.1rem 1rem;
+  padding: 0.65rem 1rem 0.1rem;
   background-color: #ffffff;
-  letter-spacing: 0.03em;
-  line-height: 1.4;
-  opacity: 0.8;
-  transition: opacity 0.2s ease;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  opacity: 0.9;
 }
+
+/* ==========================================
+   LOADING ANIMATION
+========================================== */
+
 .loadingBubble {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.75rem 1rem;
+  gap: 0.3rem;
+  padding: 0.85rem 1rem;
 }
 
 .dot {
-  width: 6px;
-  height: 6px;
-  background-color: #5c4d3c;
+  width: 7px;
+  height: 7px;
+  background-color: #7f8c6a;
   border-radius: 50%;
   animation: pulse 1.4s infinite ease-in-out both;
 }
@@ -318,6 +448,7 @@
 .dot:nth-child(1) {
   animation-delay: -0.32s;
 }
+
 .dot:nth-child(2) {
   animation-delay: -0.16s;
 }
@@ -329,17 +460,209 @@
     transform: scale(0);
     opacity: 0.3;
   }
+
   40% {
     transform: scale(1);
     opacity: 1;
   }
 }
 
-/* 
-==========================================================================
-   Responsive Smartphone
-========================================================================== 
-*/
+/* ==========================================
+   CODE BLOCKS
+========================================== */
+
+.codeBlockWrapper {
+  margin: 16px 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #34483a;
+  background-color: #202923;
+  font-family: "Courier New", Courier, monospace;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 5px 16px rgba(30, 59, 47, 0.12);
+  max-width: 100%;
+}
+
+.codeBlockHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #29382e;
+  padding: 10px 14px;
+  color: #c3d0bd;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #3c4b40;
+}
+
+.codeBlockPre {
+  margin: 0;
+  padding: 16px;
+  overflow-x: auto;
+  background-color: #202923;
+  max-width: 100%;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: #596b5b #202923;
+}
+
+.codeBlockPre::-webkit-scrollbar {
+  height: 7px;
+}
+
+.codeBlockPre::-webkit-scrollbar-thumb {
+  background-color: #596b5b;
+  border-radius: 10px;
+}
+
+.codeBlockPre code {
+  color: #dce7da;
+  font-size: 0.88rem;
+  background: transparent !important;
+  padding: 0 !important;
+  line-height: 1.65;
+  border-radius: 0;
+}
+
+.codeBlockFooter {
+  display: flex;
+  justify-content: flex-end;
+  background-color: #202923;
+  padding: 5px 14px 14px;
+}
+
+/* ==========================================
+   MATH BLOCKS
+========================================== */
+
+.mathBlockWrapper {
+  margin: 16px 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #c6d5c0;
+  background-color: #f4f8f0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 14px rgba(30, 59, 47, 0.07);
+  max-width: 100%;
+}
+
+.mathBlockHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #e7eee2;
+  padding: 10px 14px;
+  color: #31533d;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #c6d5c0;
+}
+
+.mathBlockPre {
+  margin: 0;
+  padding: 16px;
+  overflow-x: auto;
+  background-color: #f4f8f0;
+  background-image:
+    linear-gradient(rgba(127, 140, 106, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(127, 140, 106, 0.09) 1px, transparent 1px);
+  background-size: 22px 22px;
+  box-sizing: border-box;
+}
+
+.mathBlockPre code {
+  color: #31533d;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  font-family: "Consolas", "Courier New", monospace;
+  background: transparent !important;
+  padding: 0 !important;
+  font-weight: 600;
+  border-radius: 0;
+}
+
+.mathBlockFooter {
+  display: flex;
+  justify-content: flex-end;
+  background-color: #f4f8f0;
+  padding: 5px 14px 14px;
+}
+
+/* ==========================================
+   COPY BUTTONS
+========================================== */
+
+.copyButton {
+  background-color: #34483a;
+  color: #e5eee2;
+  border: 1px solid #536a56;
+  border-radius: 6px;
+  padding: 6px 13px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.copyButton:hover {
+  background-color: #49614c;
+  color: #ffffff;
+  border-color: #728c70;
+}
+
+.copyButton:active {
+  background-color: #1e3b2f;
+  transform: scale(0.97);
+}
+
+.mathBlockFooter .copyButton {
+  background-color: #ffffff;
+  color: #31533d;
+  border: 1px solid #c6d5c0;
+}
+
+.mathBlockFooter .copyButton:hover {
+  background-color: #e7eee2;
+  color: #1e3b2f;
+  border-color: #9db294;
+}
+
+.mathBlockFooter .copyButton:active {
+  background-color: #d8e5d2;
+}
+
+/* ==========================================
+   INLINE CODE
+========================================== */
+
+.chatMain code {
+  font-family: "Courier New", Courier, monospace;
+  background-color: #eee8d9;
+  color: #31533d;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.codeBlockPre code,
+.mathBlockPre code {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* ==========================================
+   TABLET AND SMARTPHONE
+========================================== */
+
 @media (max-width: 768px) {
   .chatContainer {
     grid-template-columns: 1fr;
@@ -349,9 +672,11 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: 280px;
-    transform: translateX(-100%);
-    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+    width: min(290px, 85vw);
+    height: 100%;
+    transform: translateX(-105%);
+    box-shadow: 4px 0 20px rgba(30, 59, 47, 0.12);
+    background-color: #fcfbf8;
   }
 
   .sidebarActive {
@@ -365,180 +690,134 @@
   .overlay {
     display: block;
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.4);
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(30, 59, 47, 0.35);
     backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
     z-index: 99;
   }
 
   .bubble {
     max-width: 85%;
   }
-}
-/* ==========================================
-   CODE BLOCKS AREA 
-   ========================================== */
-.codeBlockWrapper {
-  margin: 16px 0;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid #333333;
-  background-color: #1e1e1e;
-  font-family: "Courier New", Courier, monospace;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
 
-.codeBlockHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #2d2d2d;
-  padding: 8px 14px;
-  color: #aaaaaa;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid #333333;
-}
+  .messagesWindow {
+    padding: 1.25rem 1rem;
+  }
 
-.codeBlockPre {
-  margin: 0;
-  padding: 14px;
-  overflow-x: auto;
-  background-color: #1e1e1e;
-}
-
-.codeBlockPre code {
-  color: #d4d4d4;
-  font-size: 0.9rem;
-  background: transparent !important;
-  padding: 0 !important;
-  line-height: 1.5;
-}
-
-.codeBlockFooter {
-  display: flex;
-  justify-content: flex-end;
-  background-color: #1e1e1e;
-  padding: 4px 14px 14px 14px;
+  .inputAreaContainer {
+    padding: 0.85rem 1rem 1rem;
+  }
 }
 
 /* ==========================================
-   MATH BOARD AREA
-   ========================================== */
+   SMALL SMARTPHONES
+========================================== */
 
-.mathBlockWrapper {
-  margin: 16px 0;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid #333333;
-  background-color: #f0fdf4;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
+@media (max-width: 480px) {
+  .mobileNavbar {
+    padding: 0.8rem 0.9rem;
+  }
 
-.mathBlockHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #e3e7e4;
-  padding: 8px 14px;
-  color: #166534;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid #333333;
-}
+  .messagesWindow {
+    gap: 1rem;
+    padding: 1rem 0.8rem;
+  }
 
-.mathBlockPre {
-  margin: 0;
-  padding: 14px;
-  overflow-x: auto;
-  background-color: #f0fdf4;
-  background-image:
-    linear-gradient(#e6f4ea 1px, transparent 1px),
-    linear-gradient(90deg, #e6f4ea 1px, transparent 1px);
-  background-size: 20px 20px;
-}
+  .bubble {
+    max-width: 90%;
+    padding: 0.75rem 0.9rem;
+    font-size: 0.9rem;
+  }
 
-.mathBlockPre code {
-  color: #1e293b;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  font-family: "Consolas", "Courier New", monospace;
-  background: transparent !important;
-  padding: 0 !important;
-  font-weight: 600;
-}
+  .system .bubble {
+    max-width: 95%;
+  }
 
-.mathBlockFooter {
-  display: flex;
-  justify-content: flex-end;
-  background-color: #f0fdf4;
-  padding: 4px 14px 14px 14px;
+  .inputAreaContainer {
+    padding: 0.75rem 0.75rem 0.9rem;
+  }
+
+  .inputForm {
+    gap: 0.5rem;
+  }
+
+  .chatInput {
+    padding: 0.75rem 0.85rem;
+    font-size: 0.9rem;
+  }
+
+  .bottomInfoText {
+    font-size: 0.68rem;
+    padding: 0.55rem 0.25rem 0;
+  }
+
+  .codeBlockWrapper,
+  .mathBlockWrapper {
+    margin: 12px 0;
+    border-radius: 8px;
+  }
+
+  .codeBlockPre,
+  .mathBlockPre {
+    padding: 12px;
+  }
+
+  .codeBlockPre code,
+  .mathBlockPre code {
+    font-size: 0.8rem;
+  }
 }
 
 /* ==========================================
-   SHARED UI ACTIONS & INLINE SEGMENTS
-   ========================================== */
+   EXTRA SMALL SCREENS
+========================================== */
 
-.copyButton {
-  background-color: #2d2d2d;
-  color: #cccccc;
-  border: 1px solid #444444;
-  border-radius: 4px;
-  padding: 5px 12px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    background-color 0.2s,
-    color 0.2s,
-    border-color 0.2s;
-  font-family: inherit;
+@media (max-width: 360px) {
+  .bubble {
+    max-width: 94%;
+    font-size: 0.85rem;
+  }
+
+  .inputForm {
+    gap: 0.4rem;
+  }
+
+  .chatInput {
+    font-size: 0.85rem;
+    padding: 0.7rem;
+  }
+
+  .loadingBubble {
+    padding: 0.7rem;
+  }
+
+  .welcomeText {
+    padding: 1.5rem;
+    font-size: 1.3rem;
+  }
 }
 
-.copyButton:hover {
-  background-color: #3d3d3d;
-  color: #ffffff;
-  border-color: #555555;
+/* ==========================================
+   ACCESSIBILITY
+========================================== */
+
+.menuTrigger:focus-visible,
+.copyButton:focus-visible,
+.chatInput:focus-visible {
+  outline: 2px solid #7f8c6a;
+  outline-offset: 3px;
 }
 
-.copyButton:active {
-  background-color: #1a1a1a;
-}
-
-.mathBlockFooter .copyButton {
-  background-color: #ffffff;
-  color: #166534;
-  border: 1px solid #bbf7d0;
-}
-
-.mathBlockFooter .copyButton:hover {
-  background-color: #dcfce7;
-  color: #14532d;
-  border-color: #86efac;
-}
-
-.mathBlockFooter .copyButton:active {
-  background-color: #bbf7d0;
-}
-
-code {
-  font-family: "Courier New", Courier, monospace;
-  background-color: #eee0c0;
-  color: #1e1e1e;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.85rem;
+@media (prefers-reduced-motion: reduce) {
+  .chatContainer *,
+  .chatContainer *::before,
+  .chatContainer *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import Button from "./model_button/Button";
+import Button from "../../../global/button/Button";
 import styles from "./AskModel.module.css";
 import { fetch_get_models } from "../../../../services/bot_api";
 

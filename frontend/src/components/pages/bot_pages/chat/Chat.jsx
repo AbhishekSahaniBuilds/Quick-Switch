@@ -369,6 +369,10 @@ function Chat() {
           <Link to="/model" onClick={() => setIsSidebarOpen(false)}>
             <Button>Choose another Model</Button>
           </Link>
+
+          <Link to="/" onClick={() => setIsSidebarOpen(false)}>
+            <Button>Back</Button>
+          </Link>
         </div>
       </div>
 
