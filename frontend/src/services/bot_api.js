@@ -52,7 +52,7 @@ export const fetch_prompt_with_memory = async (
   owner,
   model,
   temperature = 0.7,
-  messages, // Pass the full conversation array here
+  messages,
 ) => {
   try {
     let promptInfo = {
@@ -60,7 +60,7 @@ export const fetch_prompt_with_memory = async (
       owner: owner,
       model: model,
       temperature: temperature,
-      messages: messages, // Send the array to your backend
+      messages: messages,
     };
 
     const response = await api_client.post(`${bot_route}prompt`, promptInfo);

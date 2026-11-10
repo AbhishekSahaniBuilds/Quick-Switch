@@ -91,7 +91,6 @@ const getRandomWelcomeText = () => {
 const formatLLMText = (text) => {
   if (!text) return "";
 
-  // 1. First pre-process raw math notation syntax elements
   let processedText = text
     // Replace fractional fragments: \frac{a}{b} -> (a) / (b)
     .replace(/\\frac\s*{(.*?)}{(.*?)}/g, "($1) / ($2)")
@@ -194,10 +193,21 @@ function StandardCodeBlock({
 // ============================================================================
 // MAIN STATE CORE & INTERFACE FLOW
 // ============================================================================
-
 function Chat() {
-  const { provider, creator, modelId, modelName } = useParams();
+  // --- Local Storage ---
+  if (localStorage.getItem("temperature") === null) {
+    localStorage.setItem("temperature", 0.7);
+  }
+  if (localStorage.getItem("system_prompts") === null) {
+    localStorage.setItem(
+      "system_prompts",
+      JSON.stringify([
+        { role: "system", content: "You are a helpful Chat-Bot." },
+      ]),
+    );
+  }
 
+  const { provider, creator, modelId, modelName } = useParams();
   const activeModel = modelId ? decodeURIComponent(modelId) : "Unknown Model";
   const activeProvider = provider
     ? decodeURIComponent(provider)
@@ -210,19 +220,24 @@ function Chat() {
     : "Unknown Name";
 
   // --- Core Application State Definitions ---
-  const [temperature, setTemperature] = useState(0.7);
-  const [sysPrompt, setSysPrompt] = useState("You are a helpful Chat-Bot.");
+  const temperature = localStorage.getItem("temperature");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [inputText, setInputText] = useState("");
-  const [messages, setMessages] = useState([
-    { role: "system", content: "You are a helpful Chat-Bot." },
-  ]);
+  const [messages, setMessages] = useState(() => {
+    return (
+      JSON.parse(localStorage.getItem("chat_history")) ||
+      JSON.parse(localStorage.getItem("system_prompts"))
+    );
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [welcomeState, setWelcomeState] = useState("hide");
   const [welcomeTextInnerText, setWelcomeTextInnerText] =
     useState(getRandomWelcomeText);
+  useEffect(() => {
+    localStorage.setItem("chat_history", JSON.stringify(messages));
+  }, [messages]);
 
   // --- Core References & Derived Flags ---
   const messagesEndRef = useRef(null);
@@ -321,19 +336,6 @@ function Chat() {
     }
   };
 
-  const handleSysPromptChange = (newVal) => {
-    setSysPrompt(newVal);
-    setMessages((prev) => {
-      let copy = [...prev];
-      if (copy.length > 0 && copy[0]?.role === "system") {
-        copy[0] = { ...copy[0], content: newVal };
-      } else {
-        copy.unshift({ role: "system", content: newVal });
-      }
-      return copy;
-    });
-  };
-
   const handleClearHistory = () => {
     setMessages([{ role: "system", content: sysPrompt }]);
     setErrorMessage("");
@@ -363,27 +365,9 @@ function Chat() {
           <span className={styles.metaBadge}>{activeCreator}</span>
         </div>
 
-        <div className={styles.configGroup}>
-          <label>System Prompt</label>
-          <textarea
-            value={sysPrompt}
-            onChange={(e) => handleSysPromptChange(e.target.value)}
-            rows={4}
-          />
-        </div>
-
-        <div className={styles.configGroup}>
-          <label>Temperature ({temperature})</label>
-          <input
-            type="range"
-            min="0"
-            max="2"
-            step="0.1"
-            value={temperature}
-            onChange={(e) => setTemperature(parseFloat(e.target.value))}
-          />
-        </div>
-
+        <Link to="/settings" onClick={() => setIsSidebarOpen(false)}>
+          <Button>Settings</Button>
+        </Link>
         <button
           type="button"
           className={styles.clearBtn}
