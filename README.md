@@ -16,8 +16,7 @@ Powered by **Groq** and built with **React** and **FastAPI**, Quick Switch focus
 
 - [✨ Features](#-features)
 - [🚀 Future Goals](#-future-goals)
-- [🌐 Live Demo](#-live-demo)
-- [🖥️ Screenshots](#️-screenshots)
+- [🌐 Live Demo & Links](#-live-demo--links)
 - [🛠️ Technology Stack](#️-technology-stack)
 - [🏗️ Project Architecture](#️-project-architecture)
 - [📂 Project Structure](#-project-structure)
@@ -34,7 +33,7 @@ Powered by **Groq** and built with **React** and **FastAPI**, Quick Switch focus
 - [🤝 Contributing](#-contributing)
 - [📜 License](#-license)
 - [🙏 Acknowledgements](#-acknowledgements)
-- [👨‍💻 Developer](#-developer)
+- [💻 Developer](#-developer)
 
 ---
 
@@ -594,7 +593,7 @@ Quick Switch is built with the help of these technologies and services:
 
 ---
 
-## 👨‍💻 Developer
+## 💻 Developer
 
 **Abhishek Sahani**
 
