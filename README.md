@@ -112,18 +112,6 @@ Quick Switch is continuously evolving. The following are ideas and potential imp
 
 ---
 
-## 🖥️ Screenshots
-
-<div align="center">
-  <img src="screenshots/homepage.png" alt="Homepage" width="45%" align="left" style="border-radius: 12px; border: 1px solid #30363d;">
-  <img src="screenshots/settingsPage.png" alt="Mobile Interface" width="30%" style="border-radius: 12px; border: 1px solid #30363d;">
-  <img src="screenshots/mobileInterface.png" alt="Mobile Interface" width="22%" align="right" style="border-radius: 12px; border: 1px solid #30363d;">
-
-<br clear="all"> <br clear="all">
-
-  <img src="screenshots/chatPage1.png" alt="Chat Interface" width="100%" style="border-radius: 12px; border: 1px solid #30363d;">
-</div>
-
 ## 🛠️ Technology Stack
 
 Quick Switch uses a separate frontend and backend within a single repository.
