@@ -1,5 +1,7 @@
 # ⚡ Quick Switch
 
+## Fast Response, Less Waiting!
+
 ### A fast, lightweight AI chatbot built for instant conversations.
 
 Quick Switch is a lightweight, browser-based AI chatbot designed to make interacting with AI simple, fast, and accessible.
@@ -612,5 +614,5 @@ Project Repository:
 <p align="center">
   Made with ❤️ by Abhishek Sahani
   <br>
-  <strong>Quick Switch — Fast Response. Less Waiting.</strong>
+  <strong>Quick Switch — Fast Response, Less Waiting.</strong>
 </p>
