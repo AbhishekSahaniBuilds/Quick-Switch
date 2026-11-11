@@ -231,9 +231,7 @@ function Settings() {
               >
                 GitHub Profile
               </a>
-
               <span className={styles.divider}>•</span>
-
               <a
                 href="https://github.com/AbhishekSahaniBuilds/Quick-Switch"
                 target="_blank"
@@ -241,6 +239,14 @@ function Settings() {
                 className={styles.metaLink}
               >
                 Repository
+              </a>{" "}
+              <a
+                href="https://abhisheksahanibuilds.github.io/Doc-Stack/projects/Quick-Switch/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.metaLink}
+              >
+                Documentation
               </a>
             </div>
           </div>
