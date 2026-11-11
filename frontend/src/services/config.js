@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const BACKEND_URL = "";
+export const BACKEND_URL = "https://quick-switch-backend.onrender.com/";
 
 const api_client = axios.create({
   baseURL: BACKEND_URL,

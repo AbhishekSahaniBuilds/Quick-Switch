@@ -102,11 +102,13 @@ Quick Switch is continuously evolving. The following are ideas and potential imp
 
 ---
 
-## 🌐 Live Demo
+## 🌐 Live Demo & Links
 
-**Live Website:** [............Add after deploy.......................]
+🚀 **Live Website:** https://abhisheksahanibuilds.github.io/Quick-Switch
 
-**Github Repository:** (https://github.com/AbhishekSahaniBuilds/Quick-Switch)
+⚙️ **Backend API:** https://quick-switch-backend.onrender.com
+
+💻 **GitHub Repository:** https://github.com/AbhishekSahaniBuilds/Quick-Switch
 
 ---
 
