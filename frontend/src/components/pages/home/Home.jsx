@@ -8,9 +8,7 @@ function Home() {
       <div className={styles.contentContainer}>
         <div className={styles.contentWrapper}>
           <h1 className={styles.titleWrapper}>Quick Switch</h1>
-          <h2 className={styles.subtitleText}>
-            An intuitive chatbot designed for seamless model switching.
-          </h2>
+          <h2 className={styles.subtitleText}>Fast Response, Less Waiting!</h2>
 
           <p className={styles.bodyText}>
             Quick Switch connects directly to multiple API providers, allowing
