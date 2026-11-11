@@ -49,6 +49,7 @@ function Home() {
               >
                 Repository
               </a>
+              <span className={styles.divider}>•</span>
               <a
                 href="https://abhisheksahanibuilds.github.io/Doc-Stack/projects/Quick-Switch/"
                 target="_blank"
