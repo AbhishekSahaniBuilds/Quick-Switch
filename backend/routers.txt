@@ -1,2 +1,2 @@
-root - bot - get_model
+root - bot - get_models
             prompt

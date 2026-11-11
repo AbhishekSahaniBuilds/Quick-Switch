@@ -19,7 +19,7 @@ function Home() {
 
           <div className={styles.buttonContainer}>
             <Link to="/model" style={{ textDecoration: "none" }}>
-              <Button>Start a Session</Button>
+              <Button>Start the Session</Button>
             </Link>
           </div>
 

@@ -16,7 +16,7 @@ import styles from "./Chat.module.css";
 const WELCOME_MESSAGES = [
   "Hello, How can I help you?",
   "What is todays goal?",
-  "sqrt(-1) am a chat bot!",
+  "sqrt(-1) am Quick Switch!",
   "01001000 01100101 01101100 01101100 01101111 (That means Hello in binary).",
   ".... . .-.. .-.. --- (That means Hello in Morse code)",
   "Running thoughts.exe... How can I assist you today?",
