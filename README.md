@@ -104,7 +104,9 @@ Quick Switch is continuously evolving. The following are ideas and potential imp
 
 ## 🌐 Live Demo
 
-**Website:** [Add your live website URL here]
+**Live Website:** [............Add after deploy.......................]
+
+**Github Repository:** (https://github.com/AbhishekSahaniBuilds/Quick-Switch)
 
 ---
 
@@ -608,8 +610,6 @@ Quick Switch is built with the help of these technologies and services:
 - [React](https://react.dev/) — Frontend library.
 - [FastAPI](https://fastapi.tiangolo.com/) — Python backend framework.
 - [Render](https://render.com/) — Planned backend hosting platform.
-
-A big thanks to the developers and communities behind these technologies.
 
 ---
 
