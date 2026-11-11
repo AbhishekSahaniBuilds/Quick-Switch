@@ -821,3 +821,8 @@
     transition-duration: 0.01ms !important;
   }
 }
+.chatMain .codeBlockWrapper .codeBlockPre code {
+  color: #c3d0bd !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
